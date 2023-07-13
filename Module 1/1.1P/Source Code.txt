@@ -1,0 +1,31 @@
+// Pin configurations
+const int ledPin = 3; 
+const int pirPin = 2; 
+
+// Variables
+int pirState = LOW;        
+int pirPreviousState = LOW;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);  
+  pinMode(pirPin, INPUT);   
+  Serial.begin(9600);       
+}
+
+void loop() {
+  pirState = digitalRead(pirPin);    // Read the PIR sensor value
+
+  // If the PIR sensor state has changed
+  if (pirState != pirPreviousState) {
+    if (pirState == HIGH) {
+
+      digitalWrite(ledPin, HIGH);   
+      Serial.println("Motion detected!");
+    } else {
+
+      digitalWrite(ledPin, LOW); 
+      Serial.println("Motion ended!");
+    }
+    pirPreviousState = pirState;    
+  }
+}
