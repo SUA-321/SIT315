@@ -1,0 +1,47 @@
+const int ledPirPin = 4;
+const int ledTiltPin = 5;
+const int pirPin = 2;
+const int tiltSensorPin = 3;
+
+volatile int pirState = LOW;
+volatile int tiltSensorState = LOW;
+
+void setup() {
+  pinMode(ledPirPin, OUTPUT);
+  pinMode(ledTiltPin, OUTPUT);
+  pinMode(pirPin, INPUT);
+  pinMode(tiltSensorPin, INPUT_PULLUP);
+
+  Serial.begin(9600);
+
+  attachInterrupt(digitalPinToInterrupt(pirPin), motionDetected, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(tiltSensorPin), tiltDetected, CHANGE);
+}
+
+void loop() {
+ // no need for loop with interrupts
+}
+
+void motionDetected() {
+  pirState = digitalRead(pirPin);
+
+  if (pirState == HIGH) {
+    digitalWrite(ledPirPin, HIGH);  //Turn on the PIR LED
+    Serial.println(Motion detected);
+  } else {
+    digitalWrite(ledPirPin, LOW);  //Turn off the PIR LED
+    Serial.println(Motion gone);
+  }
+}
+
+void tiltDetected() {
+  tiltSensorState = digitalRead(tiltSensorPin);
+
+  if (tiltSensorState == LOW) {
+    digitalWrite(ledTiltPin, HIGH);  //Turn on the Tilt LED
+    Serial.println(Tilt detected);
+  } else {
+    digitalWrite(ledTiltPin, LOW);  //Turn off the Tilt LED
+    Serial.println(No tilt);
+  }
+}
